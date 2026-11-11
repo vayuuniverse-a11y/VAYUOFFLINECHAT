@@ -1,4 +1,4 @@
-/* === UNIFIED ADDONS: #Whisper, #Poll, #FlyingText & #StopFlyText (PART 1 OF 2) === */
+/* === UNIFIED ADDONS: #Whisper, #Poll, #FlyingText, #StopFlyText & #Spin (PART 1 OF 2) === */
 (function () {
   const input = document.getElementById('msg-input');
   const sendBtn = document.getElementById('send-btn');
@@ -34,6 +34,7 @@
     const users = Array.from(new Set(new Array('everyone').concat(cachedNames)));
     users.forEach(n => { if (n.toLowerCase().startsWith(query)) addChip('#' + n, '#' + n + ' ', false); });
     if ('poll'.startsWith(query)) addChip('#Poll "Question"', '#Poll "What is 1 + 5"', false);
+    if ('spin'.startsWith(query)) addChip('#spin', '#spin', false);
     if (amIOwner()) {
       new Array('FlyingText "Hello"(5 second)', 'StopFlyText').forEach(c => {
         if (c.toLowerCase().startsWith(query)) addChip('#' + c, '#' + c, true);
@@ -90,6 +91,17 @@
       });
       return;
     }
+
+    if (lower.startsWith('#spin')) {
+      const spinMatch = raw.match(/^#spin(?:\((\d+)\))?$/i);
+      if (!spinMatch) return alert('Format: #spin OR #spin(5)');
+      const count = Math.min(Math.max(parseInt(spinMatch, 10) || 1, 1), 20);
+      input.value = '';
+      await db.ref('messages/' + currentRoomId).push({
+        sender: currentUser, text: '🌀 [SPIN_COUNT:' + count + ']', readed: false, createdAt: Date.now()
+      });
+      return;
+    }
 /* === UNIFIED ADDONS (PART 2 OF 2) === */
     if (raw.startsWith('#') && raw.includes(' ')) {
       const sp = raw.indexOf(' ');
@@ -129,8 +141,8 @@
       document.body.appendChild(el);
       const t = setInterval(() => {
         if (!document.getElementById('fly_' + id)) return clearInterval(t);
-        el.style.top = Math.floor(10 + Math.random() * 75) + 'vh';
-        el.style.left = Math.floor(5 + Math.random() * 75) + 'vw';
+        el.style.top = Math.floor(10 + Math.floor(Math.random() * 75)) + 'vh';
+        el.style.left = Math.floor(5 + Math.floor(Math.random() * 75)) + 'vw';
       }, 1300);
       setTimeout(() => { clearInterval(t); el.remove(); db.ref('flying_texts/' + id).remove(); }, rem);
     });
@@ -141,6 +153,31 @@
     const me = currentUser.toLowerCase();
     chatBox.querySelectorAll('.msg').forEach(b => {
       const txt = b.textContent || '';
+      
+      const spinM = '🌀 [SPIN_COUNT:';
+      const spinS = txt.indexOf(spinM), spinE = txt.indexOf(']', spinS);
+      if (spinS !== -1 && spinE !== -1 && !b.dataset.spinDone) {
+        b.dataset.spinDone = '1';
+        const totalSpins = parseInt(txt.slice(spinS + spinM.length, spinE), 10) || 1;
+        const targetMenu = document.getElementById('chat-screen') || b.closest('.panel');
+        
+        const bodyNode = b.querySelector('.msg-body');
+        if (bodyNode) bodyNode.textContent = '🌀 Executed layout spin sequence (' + totalSpins + 'x)!';
+        
+        if (targetMenu) {
+          let currentSpin = 0;
+          function runSpin() {
+            if (currentSpin >= totalSpins) return;
+            targetMenu.classList.remove('execute-menu-spin');
+            void targetMenu.offsetWidth; 
+            targetMenu.classList.add('execute-menu-spin');
+            currentSpin++;
+            setTimeout(runSpin, 1010);
+          }
+          runSpin();
+        }
+      }
+
       const pm = '白 [PRIVATE to ';
       const ps = txt.indexOf(pm), pe = txt.indexOf(']:', ps);
       if (ps !== -1 && pe !== -1) {
@@ -172,7 +209,7 @@
           const btn = document.createElement('button');
           const myVote = votes[me] === idx;
           btn.textContent = lbl + ' (' + (counts.get(idx) || 0) + ')';
-          btn.style.cssText = 'display:block;width:100%;text-align:left;margin-bottom:5px;padding:6px 10px;border-radius:8px;cursor:pointer;font-weight:bold;border:1px solid #ffd60a;background:' + (myVote ? '#ffd60a' : '#000') + ';color:' + (myVote ? '#000' : '#ffd60a') + ';';
+          btn.style.cssText = 'display:block;width:100%;text-align:left;margin-bottom:5px;padding:6px 10px;border-radius:8px;cursor:pointer;font-weight:bold;border:1px solid #ffd60a;background:' + (myVote ? '#ffd60a' : '#000') + ';color:' + (myVote ? '#000' : '#ffd60a');
           btn.onclick = () => db.ref('polls/' + pollId + '/votes/' + me).set(idx);
           box.appendChild(btn);
         });
