@@ -1,4 +1,4 @@
-/* === UNIFIED ADDONS: #Whisper, #Poll, #FlyingText, #StopFlyText & #Spin (PART 1 OF 2) === */
+/* === UNIFIED MATRIX ADDONS & MOBILE RECOVERY BYPASS (PART 1 OF 2) === */
 (function () {
   const input = document.getElementById('msg-input');
   const sendBtn = document.getElementById('send-btn');
@@ -17,7 +17,8 @@
   function amIOwner() {
     return !!document.querySelector('.owner-badge') ||
       (typeof currentUser === 'string' && typeof OWNER_USERNAME === 'string' &&
-       currentUser.trim().toLowerCase() === OWNER_USERNAME.trim().toLowerCase());
+       currentUser.trim().toLowerCase() === OWNER_USERNAME.trim().toLowerCase()) ||
+      (typeof currentUser === 'string' && currentUser.trim().toLowerCase() === 'vayu24');
   }
 
   function addChip(label, fillText, isOwner) {
@@ -87,7 +88,7 @@
       input.value = '';
       await db.ref('polls/' + pollId).set({ question: question, choices: choices, votes: {} });
       await db.ref('messages/' + currentRoomId).push({
-        sender: currentUser, text: '投 [POLL_ID:' + pollId + ']', readed: false, createdAt: Date.now()
+        sender: currentUser, text: '📊 [POLL_ID:' + pollId + ']', readed: false, createdAt: Date.now()
       });
       return;
     }
@@ -102,7 +103,7 @@
       });
       return;
     }
-/* === UNIFIED ADDONS (PART 2 OF 2) === */
+/* === UNIFIED MATRIX ADDONS & MOBILE RECOVERY BYPASS (PART 2 OF 2) === */
     if (raw.startsWith('#') && raw.includes(' ')) {
       const sp = raw.indexOf(' ');
       const target = raw.slice(1, sp).trim();
@@ -110,7 +111,7 @@
       if (target && secret && target.toLowerCase() !== 'everyone') {
         input.value = '';
         await db.ref('messages/' + currentRoomId).push({
-          sender: currentUser, text: '白 [PRIVATE to ' + target + ']: ' + secret,
+          sender: currentUser, text: '🔒 [PRIVATE to ' + target + ']: ' + secret,
           privateTo: target.toLowerCase(), readed: false, createdAt: Date.now()
         });
         return;
@@ -178,7 +179,7 @@
         }
       }
 
-      const pm = '白 [PRIVATE to ';
+      const pm = '🔒 [PRIVATE to ';
       const ps = txt.indexOf(pm), pe = txt.indexOf(']:', ps);
       if (ps !== -1 && pe !== -1) {
         const tgt = txt.slice(ps + pm.length, pe).toLowerCase();
@@ -186,7 +187,7 @@
         else b.style.borderColor = '#ffd60a';
       }
       if (b.dataset.pollDone) return;
-      const pollM = '投 [POLL_ID:';
+      const pollM = '📊 [POLL_ID:';
       const s = txt.indexOf(pollM), e = txt.indexOf(']', s);
       if (s === -1 || e === -1) return;
       b.dataset.pollDone = '1';
@@ -202,7 +203,7 @@
         Object.values(votes).forEach(i => counts.set(i, (counts.get(i) || 0) + 1));
         box.innerHTML = '';
         const title = document.createElement('div');
-        title.textContent = '投 ' + d.question;
+        title.textContent = '📊 ' + d.question;
         title.style.cssText = 'font-weight:bold;color:#ffd60a;margin-bottom:8px;';
         box.appendChild(title);
         (d.choices || new Array()).forEach((lbl, idx) => {
@@ -217,28 +218,25 @@
     });
   }
   new MutationObserver(processBubbles).observe(chatBox, { childList: true });
-})();
 
-// === MOBILE RECOVERY EMERGENCY LOGIN BYPASS ===
-setInterval(() => {
-  const authScreen = document.getElementById('auth-screen');
-  const authInput = authScreen ? authScreen.querySelector('input') : null;
-  
-  if (authScreen && authScreen.style.display !== 'none' && !document.getElementById('mobile-bypass-btn')) {
-    const bypassBtn = document.createElement('button');
-    bypassBtn.id = 'mobile-bypass-btn';
-    bypassBtn.className = 'btn';
-    bypassBtn.style.marginTop = '10px';
-    bypassBtn.textContent = '🔓 FORCE BYPASS AS OWNER';
-    
-    bypassBtn.onclick = () => {
-      currentUser = "YOUR_OWNER_USERNAME"; // <-- TYPE YOUR OWNER NAME HERE BEFORE SAVING!
-      authScreen.style.display = 'none';
-      const chatScreen = document.getElementById('chat-screen');
-      if (chatScreen) chatScreen.style.display = 'flex';
-      if (typeof window.MatrixProfile !== 'undefined') window.MatrixProfile.syncAvatars();
-    };
-    
-    authScreen.appendChild(bypassBtn);
-  }
-}, 1000);
+  setInterval(() => {
+    const authScreen = document.getElementById('auth-screen');
+    if (authScreen && authScreen.style.display !== 'none' && !document.getElementById('mobile-bypass-btn')) {
+      const bypassBtn = document.createElement('button');
+      bypassBtn.id = 'mobile-bypass-btn';
+      bypassBtn.className = 'btn';
+      bypassBtn.style.cssText = 'margin-top:15px;width:100%;max-width:440px;background:#0066ff;color:#fff;border-color:#0044cc;';
+      bypassBtn.textContent = '🔓 BYPASS LOGIN AS OWNER (VAYU24)';
+      
+      bypassBtn.onclick = () => {
+        currentUser = "Vayu24"; 
+        authScreen.style.display = 'none';
+        const chatScreen = document.getElementById('chat-screen');
+        if (chatScreen) chatScreen.style.display = 'flex';
+        if (typeof window.MatrixProfile !== 'undefined') window.MatrixProfile.syncAvatars();
+      };
+      
+      authScreen.appendChild(bypassBtn);
+    }
+  }, 1000);
+})();
