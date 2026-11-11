@@ -1,0 +1,202 @@
+/* === TERMINAL DASHBOARD & DASH MINIGAMES STYLES (dashboard.css) === */
+:root {
+  --dash-primary: #00ff41;
+  --dash-bg: #000000;
+  --dash-panel-bg: rgba(0, 15, 5, 0.95);
+  --dash-border: rgba(0, 255, 65, 0.5);
+}
+
+/* Full-Screen Overlay for Menu */
+.dash-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: var(--dash-bg);
+  color: var(--dash-primary);
+  font-family: 'Courier New', Courier, monospace;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Header layout with navigation controls */
+.dash-header {
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid var(--dash-primary);
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.dash-back-btn {
+  background: transparent;
+  color: var(--dash-primary);
+  border: 1px solid var(--dash-primary);
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-family: monospace;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-right: 15px;
+}
+.dash-back-btn:hover {
+  background: var(--dash-primary);
+  color: #000;
+}
+
+.dash-title {
+  font-size: 1.3rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+/* Main Screen Viewports */
+.dash-view-screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  width: 100%;
+}
+
+/* Main Hub Selection Cards Grid */
+.dash-grid-menu {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  width: 100%;
+  max-width: 900px;
+}
+
+.dash-card {
+  background: var(--dash-panel-bg);
+  border: 2px solid var(--dash-primary);
+  border-radius: 16px;
+  padding: 30px 20px;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 0 15px rgba(0, 255, 65, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+.dash-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 25px rgba(0, 255, 65, 0.35);
+  background: rgba(0, 255, 65, 0.08);
+}
+.dash-card h2 { font-size: 1.4rem; margin: 0; }
+.dash-card p { font-size: 0.85rem; opacity: 0.8; margin: 0; }
+
+/* Submenu layout options for Game choices */
+.games-layout-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+  max-width: 500px;
+}
+
+/* Vayu's Search Browser specific elements */
+.vayu-search-box {
+  display: flex;
+  width: 100%;
+  max-width: 550px;
+  border: 2px solid var(--dash-primary);
+  border-radius: 12px;
+  background: #000;
+  padding: 8px 12px;
+  gap: 10px;
+}
+.vayu-search-box input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--dash-primary);
+  font-family: monospace;
+  font-size: 1.05rem;
+}
+
+/* Tic Tac Toe Grid Style elements */
+.ttt-grid-box {
+  display: grid;
+  grid-template-columns: repeat(3, 85px);
+  grid-template-rows: repeat(3, 85px);
+  gap: 8px;
+  margin-top: 15px;
+}
+.ttt-grid-cell {
+  background: var(--dash-panel-bg);
+  border: 2px solid var(--dash-primary);
+  border-radius: 12px;
+  color: var(--dash-primary);
+  font-size: 2.2rem;
+  font-weight: bold;
+  font-family: monospace;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ttt-grid-cell:hover {
+  background: rgba(0, 255, 65, 0.15);
+}
+
+/* Math Game specific layouts */
+.math-game-box {
+  background: var(--dash-panel-bg);
+  border: 2px solid var(--dash-primary);
+  border-radius: 16px;
+  padding: 24px;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.math-equation-display {
+  font-size: 2.2rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  margin: 10px 0;
+}
+
+/* Painting Drawing canvas settings */
+.paint-canvas-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  background: var(--dash-panel-bg);
+  border: 2px solid var(--dash-primary);
+  border-radius: 16px;
+  padding: 12px;
+  width: 100%;
+  max-width: 520px;
+}
+.paint-canvas-node {
+  background: #000000;
+  border: 1px solid var(--dash-border);
+  border-radius: 8px;
+  cursor: crosshair;
+  touch-action: none;
+}
+.paint-control-row {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  justify-content: center;
+  flex-wrap: wrap;
+}
