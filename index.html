@@ -969,4 +969,137 @@
 </script>
 </body>
 </html>
+<!-- === VAYU SECURITY GATE (BOT CHECK & MEMBER PASSWORD) === -->
+<style>
+  #vayu-gate-overlay {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #000000;
+    color: var(--primary, #00ff41);
+    font-family: 'Courier New', Courier, monospace;
+    z-index: 9999999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  .vayu-gate-box {
+    background: var(--bg-panel, rgba(0, 15, 5, 0.95));
+    border: 2px solid var(--primary, #00ff41);
+    border-radius: 16px;
+    padding: 28px 24px;
+    width: 100%;
+    max-width: 380px;
+    text-align: center;
+    box-shadow: 0 0 25px var(--primary-dim, rgba(0, 255, 65, 0.25));
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .vayu-bot-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    font-size: 1.15rem;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 12px;
+    border: 1.5px solid var(--primary-border, rgba(0, 255, 65, 0.5));
+    border-radius: 12px;
+    background: var(--bg-dark, rgba(0, 5, 2, 0.85));
+  }
+  .vayu-bot-row input[type="checkbox"] {
+    width: 22px;
+    height: 22px;
+    accent-color: var(--primary, #00ff41);
+    cursor: pointer;
+  }
+  .vayu-pass-input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1.5px solid var(--primary, #00ff41);
+    background: #000;
+    color: var(--primary, #00ff41);
+    font-size: 1rem;
+    text-align: center;
+    outline: none;
+  }
+  .vayu-gate-btn {
+    background: var(--primary-dim, rgba(0, 255, 65, 0.14));
+    color: var(--primary, #00ff41);
+    border: 1.5px solid var(--primary, #00ff41);
+    border-radius: 12px;
+    padding: 10px 16px;
+    font-weight: bold;
+    font-size: 0.95rem;
+    cursor: pointer;
+  }
+  .vayu-gate-btn:hover {
+    background: var(--primary, #00ff41);
+    color: #000;
+  }
+</style>
+
+<div id="vayu-gate-overlay">
+  <!-- STEP 1: BOT CHECK -->
+  <div id="vayu-step-bot" class="vayu-gate-box">
+    <h3>/// SECURITY CHECK ///</h3>
+    <label class="vayu-bot-row">
+      <input type="checkbox" id="vayu-bot-check">
+      <span>Are you a bot?</span>
+    </label>
+  </div>
+
+  <!-- STEP 2: MEMBER PASSWORD -->
+  <div id="vayu-step-member" class="vayu-gate-box" style="display:none;">
+    <h3>/// ACCESS VERIFICATION ///</h3>
+    <div style="font-size:1.05rem;font-weight:bold;">Are you Vayu's Member?</div>
+    <input type="text" id="vayu-member-pass" class="vayu-pass-input" placeholder="Enter secret password...">
+    <div id="vayu-gate-err" style="display:none;color:#ff3b3b;font-size:0.85rem;font-weight:bold;">WRONG PASSWORD! Ask Vayu for access.</div>
+    <button type="button" id="vayu-member-submit" class="vayu-gate-btn">UNLOCK DASHBOARD</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  const overlay = document.getElementById('vayu-gate-overlay');
+  const stepBot = document.getElementById('vayu-step-bot');
+  const stepMember = document.getElementById('vayu-step-member');
+  const botCheck = document.getElementById('vayu-bot-check');
+  const passInput = document.getElementById('vayu-member-pass');
+  const submitBtn = document.getElementById('vayu-member-submit');
+  const errTxt = document.getElementById('vayu-gate-err');
+
+  botCheck.addEventListener('change', function () {
+    if (this.checked) {
+      setTimeout(() => {
+        stepBot.style.display = 'none';
+        stepMember.style.display = 'flex';
+        passInput.focus();
+      }, 300);
+    }
+  });
+
+  function checkSecretPassword() {
+    const val = passInput.value.trim().toUpperCase();
+    if (val === 'VY24') {
+      overlay.style.display = 'none';
+    } else {
+      errTxt.style.display = 'block';
+      passInput.value = '';
+      passInput.focus();
+    }
+  }
+
+  submitBtn.addEventListener('click', checkSecretPassword);
+  passInput.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') checkSecretPassword();
+  });
+})();
+</script>
+
 
